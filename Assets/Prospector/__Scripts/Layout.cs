@@ -35,5 +35,59 @@ public void ReadLayout(string xmlText)
         xmlr = new PT_XMLReader();
         xmlr.Parse(xmlText);   // The XMl is parsed 
         xml = xmlr.xml["xml"][0];  // And xml is set as a shortcut to the XMl
+
+        // Read in the multiplier, which sets card spacing
+        multiplier.x = float.Parse(xml["multilier"][0].att("x"));
+        multiplier.x = float.Parse(xml["multilier"][0].att("y"));
+
+        // Read in the slots
+        SlotDef tSD;
+        //slotsX is used as a shortcut to all the <slots>s
+        PT_XMLHashList slotsX = xml["slot"];
+
+        for (int i=0; i <slotsX.Count; i++)
+        {
+            tSD = new SlotDef(); // Creat a new SlotDef instance
+            if (slotsX[i].HasAtt("type"))
+            {
+                // if this <slot> has a type attribute parse it
+                tSD.type = slotsX[i].att("type");
+            } else
+            {
+                // If not, set its type to "slot"; it's a card in the rows
+                tSD.type = "slot";
+            }
+            // various attributes are parsed into numerical values
+            tSD.x = float.Parse(slotsX[i].att("x"));
+            tSD.x = float.Parse(slotsX[i].att("y"));
+            tSD.layerID = int.Parse(slotsX[i].att("layer"));
+            switch (tSD.type)
+            {
+                // pull additional attributes based on the type of this <slot>
+                case "slot":
+                    tSD.faceUp = (slotsX[i].att("faceup") == "1");
+                    tSD.id = int.Parse(slotsX[i].att("id"));
+                    if (slotsX[i].HasAtt("hiddenby"))
+                    {
+                        string[] hiding = slotsX[i].att("hiddenby").Split(',');
+                        foreach (string s in hiding)
+                        {
+                            tSD.hiddenBy.Add(int.Parse(s));
+                        }
+                    }
+                    slotDefs.Add(tSD);
+                    break;
+
+                case "drawpile":
+                    tSD.stagger.x = float.Parse(slotsX[i].att("xstagger"));
+                    drawPile = tSD;
+                    break;
+                case "discardpile":
+                    discardPile = tSD;
+                    break;
+
+            }
+        }
+
     }
 }

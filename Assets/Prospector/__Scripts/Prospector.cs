@@ -21,27 +21,24 @@ public class Prospector : MonoBehaviour {
 	static public int HIGH_SCORE = 0;
 
 	[Header("Set in Inspector")]
-	public TextAsset			deckXML;
+	public TextAsset deckXML;
+	public TextAsset layoutXML;
 
 
 	[Header("Set Dynamically")]
-	public Deck					deck;
+	public Deck	deck;
+	public Layout layout;
 
 	void Awake(){
 		S = this;
-		if (PlayerPrefs.HasKey("ProspectorHighScore"))
-        {
-			HIGH_SCORE = PlayerPrefs.GetInt("ProspectorHighScore");
-        }
-		// Add the score from last round, which will be >0 if it was a win 
-		//Score += SCORE_FROM_PREV_ROUND;
-		//And rest the SCORE_FROM_PREV_ROUND
-		SCORE_FROM_PREV_ROUND = 0;
 	}
-
 	void Start() {
-		deck = GetComponent<Deck> ();
-		deck.InitDeck (deckXML.text);
+		deck = GetComponent<Deck> (); // get the Deck 
+		deck.InitDeck (deckXML.text); // pass DeckXML to it 
+		Deck.Shuffle(ref deck.cards);
+
+		layout = GetComponent<Layout>(); // Get the Layout component
+		layout.ReadLayout(layoutXML.text); // Pass LayoutXML to it
 	}
 
 }
