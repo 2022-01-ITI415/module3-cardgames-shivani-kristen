@@ -64,20 +64,18 @@ public class Prospector : MonoBehaviour {
 	// this Draw function will pull a single card from the drawPile and retuen it 
 	CardProspector Draw()
     {
-		CardProspector Draw()
-        {
 			CardProspector cd = drawPile[0]; // pull the 0th CardProspector 
 			drawPile.RemoveAt(0);
 			return (cd);
-        }
-    }
+     }
+    
 	// LayoutGame() positions the initial tableau of cards, a.k.a the "mine"
 	void LayoutGame()
     {
 		// Create an empty GameObject to serve as an anchor for the tableau
 		if(layoutAnchor == null)
         {
-			GameObject tGo = new GameObject("_layoutAnchor");
+			GameObject tGo = new GameObject("_LayoutAnchor");
 			// ^ Create an empty GameObject named _layoutAnchor in the Hierarchy
 			layoutAnchor = tGo.transform;
 			layoutAnchor.transform.position = layoutCenter;
@@ -98,10 +96,12 @@ public class Prospector : MonoBehaviour {
 				layout.multiplier.y * tSD.y,
 				-tSD.layerID);
 			// ^ Set the localPosition of the Card based on SlotDef
-			cp.layoutID - tSD.id;
+			cp.layoutID = tSD.id;
 			cp.slotDef = tSD;
 			// CardProspectors in the tableau have the state CardState.tableu 
-			cp.state - eCardState.tableau;
+			cp.state = eCardState.tableau;
+			// CardProspectors in the tableau have the state CardState.tableau
+			cp.SetSortingLayerName(tSD.layerName); // Set the sorting layers
 
 			tableau.Add(cp); // Add this CardProspector to the List<> tableau
 
