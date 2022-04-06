@@ -17,7 +17,7 @@ public enum ScoreEvent {
 
 public class Prospector : MonoBehaviour {
 
-	static public Prospector 	S;
+	static public Prospector S;
 	static public int SCORE_FROM_PREV_ROUND = 0;
 	static public int HIGH_SCORE = 0;
 
@@ -30,7 +30,7 @@ public class Prospector : MonoBehaviour {
 
 
 	[Header("Set Dynamically")]
-	public Deck	deck;
+	public Deck deck;
 	public Layout layout;
 	public List<CardProspector> drawPile;
 	public Transform layoutAnchor;
@@ -38,12 +38,12 @@ public class Prospector : MonoBehaviour {
 	public List<CardProspector> tableau;
 	public List<CardProspector> discardPile;
 
-	void Awake(){
+	void Awake() {
 		S = this;
 	}
 	void Start() {
-		deck = GetComponent<Deck> (); // get the Deck 
-		deck.InitDeck (deckXML.text); // pass DeckXML to it 
+		deck = GetComponent<Deck>(); // get the Deck 
+		deck.InitDeck(deckXML.text); // pass DeckXML to it 
 		Deck.Shuffle(ref deck.cards);
 
 		layout = GetComponent<Layout>(); // Get the Layout component
@@ -51,40 +51,40 @@ public class Prospector : MonoBehaviour {
 		drawPile = ConvertListCardsToListCardProspectors(deck.cards);
 		LayoutGame();
 	}
-     List<CardProspector> ConvertListCardsToListCardProspectors(List<Card> lCD)
-    {
-        List<CardProspector> lCP = new List<CardProspector>();
+	List<CardProspector> ConvertListCardsToListCardProspectors(List<Card> lCD)
+	{
+		List<CardProspector> lCP = new List<CardProspector>();
 		CardProspector tCP;
-		foreach( Card tCD in lCD){
+		foreach (Card tCD in lCD) {
 			tCP = tCD as CardProspector;
 			lCP.Add(tCP);
-        }
-		return(lCP);
-    }
+		}
+		return (lCP);
+	}
 	// this Draw function will pull a single card from the drawPile and retuen it 
 	CardProspector Draw()
-    {
-			CardProspector cd = drawPile[0]; // pull the 0th CardProspector 
-			drawPile.RemoveAt(0);
-			return (cd);
-     }
-    
+	{
+		CardProspector cd = drawPile[0]; // pull the 0th CardProspector 
+		drawPile.RemoveAt(0);
+		return (cd);
+	}
+
 	// LayoutGame() positions the initial tableau of cards, a.k.a the "mine"
 	void LayoutGame()
-    {
+	{
 		// Create an empty GameObject to serve as an anchor for the tableau
-		if(layoutAnchor == null)
-        {
+		if (layoutAnchor == null)
+		{
 			GameObject tGo = new GameObject("_LayoutAnchor");
 			// ^ Create an empty GameObject named _layoutAnchor in the Hierarchy
 			layoutAnchor = tGo.transform;
 			layoutAnchor.transform.position = layoutCenter;
-        }
+		}
 
-		CardProspector cp; 
+		CardProspector cp;
 		// Follow the layout
 		foreach (SlotDef tSD in layout.slotDefs)
-        {
+		{
 			// ^ Iterate through all the SlotDefs in the layout.SlotDefs as tSD
 			cp = Draw(); // Pull a card from the top (beginning) of the draw pile 
 			cp.faceUp = tSD.faceUp;
@@ -104,7 +104,92 @@ public class Prospector : MonoBehaviour {
 			cp.SetSortingLayerName(tSD.layerName); // Set the sorting layers
 
 			tableau.Add(cp); // Add this CardProspector to the List<> tableau
+		}
 
-        }
-    }
+		// set up the initail target card
+		MoveToTarget(Draw());
+		// Set up the Draw pile 
+		UpdateDrawPile();
+	}
+	//Moves the current target to the discardPile
+	void MoveToDiscard(CardProspector cd)
+	{
+		// set the sate of the card to discard 
+		cd.state = eCardState.discard;
+		discardPile.Add(cd); // Add it to the discardPile List<>
+		cd.transform.parent = layoutAnchor; // Updtae its transform parent 
+
+		//Position this card on the discardPile
+		cd.transform.localPosition = new Vector3(
+			layout.multiplier.x * layout.discardPile.x,
+			layout.multiplier.y * layout.discardPile.y,
+			-layout.discardPile.layerID + 0.5f);
+		cd.faceUp = true;
+		// Place it on top of the pile for depth sorting
+		cd.SetSortingLayerName(layout.discardPile.layerName);
+		cd.SetSortOrder(-100 + discardPile.Count);
+	}
+	//Make cd the new target card
+	void MoveToTarget(CardProspector cd)
+	{
+		// If there is currently a target card, move it to discardpile
+		if (target != null) MoveToDiscard(target);
+		target = cd; // cd is new target 
+		cd.state = eCardState.target;
+		cd.transform.parent = layoutAnchor;
+		// Move to the target positiion 
+		cd.transform.localPosition = new Vector3(
+			layout.multiplier.x * layout.discardPile.x,
+			layout.multiplier.y * layout.multiplier.y,
+			-layout.discardPile.layerID);
+		cd.faceUp = true; // Make iy face-up 
+						  // Set the depth sorting 
+		cd.SetSortingLayerName(layout.discardPile.layerName);
+		cd.SetSortOrder(0);
+	}
+	// Arranges all the cards of the drawPile to show how many are left
+	void UpdateDrawPile()
+	{
+		CardProspector cd;
+		//Go through all the cards of the drawPile 
+		for (int i = 0; i < drawPile.Count; i++)
+		{
+			cd = drawPile[i];
+			cd.transform.parent = layoutAnchor;
+			// Position it correctly with the layout.drawPile.stagger
+			Vector2 dpStagger = layout.drawPile.stagger;
+			cd.transform.localPosition = new Vector3(
+				layout.multiplier.x * (layout.drawPile.x + i * dpStagger.x),
+				layout.multiplier.y * (layout.drawPile.y + i * dpStagger.y),
+				-layout.drawPile.layerID + 0.1f * 1);
+
+			cd.faceUp = false; // Make them all face-down
+			cd.state = eCardState.drawpile;
+			//Set depth sorting
+			cd.SetSortingLayerName(layout.drawPile.layerName);
+			cd.SetSortOrder(-10 * i);
+		}
+		// CardCliked is called any time a card in the game is clicked
+	}
+	public void CardClicked(CardProspector cd)
+	{
+		// The reaction is determined by the state of the clciked card 
+		switch (cd.state)
+		{
+			case eCardState.target:
+				// Clicking the target card does nothing 
+				break;
+
+			case eCardState.drawpile:
+				// Clicking any card in the drawPile will draw the next card
+				MoveToDiscard(target); // Moves the target to the discardpile
+				MoveToTarget(Draw()); // Moves the next draw card to the target 
+				UpdateDrawPile(); // restacks the drawpile
+				break;
+
+			case eCardState.tableau:
+				//Clicking a card in the tableau will check if it's a valid play
+				break;
+		}
+	}
 }
