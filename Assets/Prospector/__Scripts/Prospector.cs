@@ -25,7 +25,7 @@ public class Prospector : MonoBehaviour {
 	public TextAsset deckXML;
 	public TextAsset layoutXML;
 	public float xoffset = 3;
-	public float yOffeset = -2.5f;
+	public float yoffeset = -2.5f;
 	public Vector3 layoutCenter;
 
 
@@ -105,12 +105,52 @@ public class Prospector : MonoBehaviour {
 
 			tableau.Add(cp); // Add this CardProspector to the List<> tableau
 		}
-
+		// Set which cards are hiding others
+		foreach(CardProspector tCP in tableau)
+        {
+			foreach(int hid in tCP.slotDef.hiddenBy)
+            {
+				cp = FindCardByLayoutID(hid);
+				tCP.hiddenBy.Add(cp);
+            }
+        }
 		// set up the initail target card
 		MoveToTarget(Draw());
 		// Set up the Draw pile 
 		UpdateDrawPile();
 	}
+	// Convert from the layoutID int to the CardProspector with that ID
+	CardProspector FindCardByLayoutID(int layoutID)
+    {
+		foreach(CardProspector tCP in tableau)
+        {
+			// Search through all cards in the tableau List<>
+			if (tCP.layoutID == layoutID)
+            {
+				// If the card has the same ID , return it 
+				return (tCP);
+            }
+        }
+		// If it's not found, return null
+		return (null);
+    }
+	// This turns cards in the Mine face-up or face-down
+	void SetTabeauFaces()
+    {
+		foreach (CardProspector cd in tableau)
+        {
+			bool faceUp = true; // Assume the card will be face-up
+			foreach(CardProspector cover in cd.hiddenBy)
+            {
+				// If either of the covering cards are in the tableau
+				if (cover.state == eCardState.tableau)
+                {
+					faceUp = false; // then this card is face-down
+                }
+            }
+			cd.faceUp = faceUp; // set the value on the card
+        }
+    }
 	//Moves the current target to the discardPile
 	void MoveToDiscard(CardProspector cd)
 	{
@@ -169,8 +209,8 @@ public class Prospector : MonoBehaviour {
 			cd.SetSortingLayerName(layout.drawPile.layerName);
 			cd.SetSortOrder(-10 * i);
 		}
-		// CardCliked is called any time a card in the game is clicked
 	}
+	// CardCliked is called any time a card in the game is clicked
 	public void CardClicked(CardProspector cd)
 	{
 		// The reaction is determined by the state of the clciked card 
@@ -189,7 +229,80 @@ public class Prospector : MonoBehaviour {
 
 			case eCardState.tableau:
 				//Clicking a card in the tableau will check if it's a valid play
+				bool validMatch = true;
+				if (!cd.faceUp)
+                {
+					// If the card is face-down, its not valid 
+					validMatch = false;
+                }
+				if (!AdjacentRank(cd, target))
+                {
+					// If it's not an adjacent rank, it's not valid
+					validMatch = false;
+                }
+				if (!validMatch) return; // return if not valid 
+
+				// If we got here, then : yay! It's a valid card.
+				tableau.Remove(cd); // Remove it form tableau List 
+				MoveToTarget(cd); // Make it the target card
+				SetTabeauFaces();
 				break;
 		}
+		// Check to see whether the game is over or not
+		CheckForGameOver();
 	}
+	// Test whether the is over 
+	void CheckForGameOver()
+    {
+		// if the tableau is empty , the game is over
+		if (tableau.Count == 0)
+        {
+			// Call GameOver() with a win 
+			GameOver(true);
+			return;
+        }
+        // If there are still cards in the draw pile, the game's not over 
+        if (drawPile.Count > 0)
+        {
+			return;
+        }
+		// Check for remaining vaild plays
+		foreach (CardProspector cd in tableau)
+        {
+			if (AdjacentRank(cd, target))
+            {
+				// If there is a valid play, the game's not over
+				return;
+            }
+        }
+		// since there are no valid plays, the game is over
+		// call GameOver with a loss
+		GameOver(false);
+	}
+	// Called when the game is over.Simple for now, but expandable
+	void GameOver(bool won)
+    {
+		if (won)
+        {
+			print("Game Over. You Won! :)");
+        } else
+        {
+			print("Game Over. You Lost.(Hehehe) :(");
+        }
+		// Reload the screne, resetting the game
+		SceneManager.LoadScene("__Prospector_Scence_0");
+    }
+	// Return true if the two cards are adjacent in the rank (A & K wrap around)
+	public bool AdjacentRank(CardProspector c0, CardProspector c1)
+    {
+		// If either card is face-down, it's not adjacent.
+		if (!c0.faceUp || !c1.faceUp) return (false);
+
+		// If they are 1 apart, they are adjacent
+		if (c0.rank == 1 && c1.rank == 13) return (true);
+		if (c0.rank == 13 && c1.rank == 1) return (true);
+
+		// otherwise, return fasle
+		return (false);
+    }
 }
