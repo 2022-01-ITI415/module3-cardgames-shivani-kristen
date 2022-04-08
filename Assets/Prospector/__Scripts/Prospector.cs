@@ -35,6 +35,7 @@ public class Prospector : MonoBehaviour {
 	public Text gameOverText, roundResultText, highScoreText;
 
 
+
 	[Header("Set Dynamically")]
 	public Deck deck;
 	public Layout layout;
@@ -44,6 +45,9 @@ public class Prospector : MonoBehaviour {
 	public List<CardProspector> tableau;
 	public List<CardProspector> discardPile;
 	public FloatingScore fsRun;
+	private Text HighScoreText;
+	private Text GameOverText;
+	private Text RoundResultText;
 
 	void Awake() {
 		S = this;

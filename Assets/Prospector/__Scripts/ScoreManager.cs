@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // An enum to handle all the possible scoring events 
 public enum eScoreEvent
@@ -73,7 +74,6 @@ public class ScoreManager : MonoBehaviour
                 chain++;
                 score += scoreRun; // add scoreRun to total score
                 break;
-
         }
         // This second switch statemet handles round wins and losses
         switch (evt)
@@ -89,7 +89,7 @@ public class ScoreManager : MonoBehaviour
                 // If its a loss check against the high score
                 if (HIGH_SCORE <= score)
                 {
-                    print("You got the high score! High score: " + score);
+                    print("You got the high score!\n High score: " + score);
                     HIGH_SCORE = score;
                     PlayerPrefs.SetInt("ProspectorHighScore", score);
                 } else
