@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 // An enum to track the possible states of a FloatingScore
 public enum eFSState
 {
@@ -15,7 +16,7 @@ public enum eFSState
 public class FloatingScore : MonoBehaviour
 {
     [Header("Set Dynamically")]
-    public eFSState state = eFSState;
+    public eFSState state = eFSState.idle;
 
     [SerializeField]
     protected int _score = 0;
@@ -116,7 +117,7 @@ public class FloatingScore : MonoBehaviour
             {
                 // 0<= u<1 , which menas that this is active and moving
                 state = eFSState.active;
-                txt.enable = true; // show the score once more
+                txt.enabled = true; // show the score once more
             }
             // Use Bezier curve to move this to the right point 
             Vector2 pos = Utils.Bezier(uC, bezierPts);
