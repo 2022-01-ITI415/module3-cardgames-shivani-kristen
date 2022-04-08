@@ -19,7 +19,7 @@ public class SlotDef {
 
 public class Layout : MonoBehaviour
 {
-    public PT_XMLReader xmlr; // like Deck has a PT_XMLReader 
+    public PT_XMLReader xmlr; // like Deck has a PT_XMLReader
     public PT_XMLHashtable xml; // variable for faster xml access 
     public Vector2 multiplier; //offset of the tableau's center 
     // SlotDef references 
@@ -37,8 +37,8 @@ public void ReadLayout(string xmlText)
         xml = xmlr.xml["xml"][0];  // And xml is set as a shortcut to the XMl
 
         // Read in the multiplier, which sets card spacing
-        multiplier.x = float.Parse(xml["multilier"][0].att("x"));
-        multiplier.x = float.Parse(xml["multilier"][0].att("y"));
+        multiplier.x = float.Parse(xml["multiplier"][0].att("x"));
+        multiplier.y = float.Parse(xml["multiplier"][0].att("y"));
 
         // Read in the slots
         SlotDef tSD;
@@ -59,8 +59,9 @@ public void ReadLayout(string xmlText)
             }
             // various attributes are parsed into numerical values
             tSD.x = float.Parse(slotsX[i].att("x"));
-            tSD.x = float.Parse(slotsX[i].att("y"));
+            tSD.y = float.Parse(slotsX[i].att("y"));
             tSD.layerID = int.Parse(slotsX[i].att("layer"));
+            tSD.layerName = sortingLayerName[tSD.layerID];
             switch (tSD.type)
             {
                 // pull additional attributes based on the type of this <slot>

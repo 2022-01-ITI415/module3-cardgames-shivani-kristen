@@ -13,8 +13,7 @@ public enum eFSState
     post
 }
 // FloatingScore can move itse;f on screen following a Bezier curve
-public class FloatingScore : MonoBehaviour
-{
+public class FloatingScore : MonoBehaviour {
     [Header("Set Dynamically")]
     public eFSState state = eFSState.idle;
 
@@ -32,7 +31,7 @@ public class FloatingScore : MonoBehaviour
         set
         {
             _score = value;
-            scoreString = _score.ToString("NO"); // "NO" adds commas to the nums
+            scoreString = _score.ToString("N0"); // "NO" adds commas to the nums
             // Search "C# Standard Numeric Format String" for ToString Formats
             GetComponent<Text>().text = scoreString;
         }
@@ -46,7 +45,7 @@ public class FloatingScore : MonoBehaviour
     public GameObject reportFinishTo = null;
 
     private RectTransform rectTrans;
-    private TextAlignment txt;
+    private Text txt;
 
     // Set up the FloatingScore and movement
     // Note the use of parameter defaults for eTimes & eTimeD

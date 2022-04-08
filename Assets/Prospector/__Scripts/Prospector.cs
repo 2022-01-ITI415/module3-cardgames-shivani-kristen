@@ -220,7 +220,7 @@ public class Prospector : MonoBehaviour {
 		// Move to the target positiion 
 		cd.transform.localPosition = new Vector3(
 			layout.multiplier.x * layout.discardPile.x,
-			layout.multiplier.y * layout.multiplier.y,
+			layout.multiplier.y * layout.discardPile.y,
 			-layout.discardPile.layerID);
 		cd.faceUp = true; // Make iy face-up 
 						  // Set the depth sorting 
@@ -361,7 +361,7 @@ public class Prospector : MonoBehaviour {
 	void ReloadLevel()
     {
 		// reload the scene, resrtting the game 
-		SceneManager.LoadScene("_Prospector_Scene_0");
+		SceneManager.LoadScene("__Prospector_Scene_0");
     }
 	// Return true if the two cards are adjacent in the rank (A & K wrap around)
 	public bool AdjacentRank(CardProspector c0, CardProspector c1)
@@ -372,6 +372,7 @@ public class Prospector : MonoBehaviour {
 		// If they are 1 apart, they are adjacent
 		if (c0.rank == 1 && c1.rank == 13) return (true);
 		if (c0.rank == 13 && c1.rank == 1) return (true);
+		if (Mathf.Abs(c0.rank - c1.rank) == 1) return (true);
 
 		// otherwise, return fasle
 		return (false);
