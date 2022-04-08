@@ -15,6 +15,6 @@ public void LoadScene0()
     }
     public void LoadScene2()
     {
-        SceneManager.LoadScene("Golf");
+        SceneManager.LoadScene("Golf_Solitaire");
     }
 }

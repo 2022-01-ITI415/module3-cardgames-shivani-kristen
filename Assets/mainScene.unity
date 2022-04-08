@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 43545271}
   - component: {fileID: 43545270}
   m_Layer: 5
-  m_Name: btnOther
+  m_Name: btnGold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -527,7 +527,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Solitaire Card Games
 
-    Module 2'
+    Module 4'
 --- !u!222 &257499086
 CanvasRenderer:
   m_ObjectHideFlags: 0
