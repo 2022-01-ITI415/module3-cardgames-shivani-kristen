@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum eCardState (
+public enum eCardState {
     drawpile,
     tableau,
     target,
     discard
-)
+}
+   
+
 
 public class CardProspector : Card
 {
