@@ -54,7 +54,34 @@ public class Prospector : MonoBehaviour {
 	CardProspector Draw() 
 	{
 		CardProspector cd = drawPile[0]; // pull the 0th cardprospector
-		
+		drawPile.RemoveAt(0); // then remove it from list<> drawpile
+		return(cd);
+	}
+
+	void LayoutGame()
+	{
+		if (layoutAnchor == null) {
+			GameObject tGO = new GameObject("_LayoutAnchor");
+			layoutAnchor = tGO.transform;
+			layoutAnchor.transform.position = layoutCenter;
+		}
+
+		CardProspector cp;
+		foreach (SlotDef tSD in layout.slotDefs) {
+			cp = Draw();
+			cp.faceUp = tSD.faceUp;
+			cp.transform.parent = layoutAnchor;
+			cp.transform.localPosition = new Vector3 (
+				layout.multiplier.x * tSD.x,
+				layout.multiplier.y * tSD.y,
+				-tSD.layerID
+			);
+			cp.layoutID = tSD.id;
+			cp.slotDef = tSD;
+			cp.state = eCardState.tableau;
+
+			tableau.Add(cp);
+		}
 	}
 
 }
