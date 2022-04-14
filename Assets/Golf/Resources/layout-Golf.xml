@@ -34,19 +34,19 @@
 	<slot id="15" x="4"  y="-3" faceup="1" layer="2" hiddenby="24,25" />
 	<slot id="16" x="6"  y="-3" faceup="1" layer="2" hiddenby="25,26" />
 	<slot id="17" x="8"  y="-3" faceup="1" layer="2" hiddenby="26,27" />
-	<slot id="18" x="-9" y="-2" faceup="1" layer="2" />
-	<slot id="19" x="-7" y="-2" faceup="1" layer="2" />
-	<slot id="20" x="-5" y="-2" faceup="1" layer="2" />
+	<slot id="18" x="-9" y="-2" faceup="1" layer="2" hiddenby="23,24"/>
+	<slot id="19" x="-7" y="-2" faceup="1" layer="2" hiddenby="23,24"/>
+	<slot id="20" x="-5" y="-2" faceup="1" layer="2" hiddenby="23,24"/>
 	
 	
 	<!-- Layer3, the top level. -->
-	<slot id="21" x="-3" y="-2" faceup="1" layer="3" />
-	<slot id="22" x="-1" y="-2" faceup="1" layer="3" />
-	<slot id="23" x="1"  y="-2" faceup="1" layer="3" />
-	<slot id="24" x="3"  y="-2" faceup="1" layer="3" />
-	<slot id="25" x="5"  y="-2" faceup="1" layer="3" />
-	<slot id="26" x="7"  y="-2" faceup="1" layer="3" />
-	<slot id="27" x="9"  y="-2" faceup="1" layer="3" />
+	<slot id="21" x="-3" y="-2" faceup="1" layer="3" hiddenby="23,24"/>
+	<slot id="22" x="-1" y="-2" faceup="1" layer="3" hiddenby="23,24"/>
+	<slot id="23" x="1"  y="-2" faceup="1" layer="3" hiddenby="23,24"/>
+	<slot id="24" x="3"  y="-2" faceup="1" layer="3" hiddenby="23,24"/>
+	<slot id="25" x="5"  y="-2" faceup="1" layer="3" hiddenby="23,24"/>
+	<slot id="26" x="7"  y="-2" faceup="1" layer="3" hiddenby="23,24"/>
+	<slot id="27" x="9"  y="-2" faceup="1" layer="3" hiddenby="23,24"/>
 
 	<!-- Layer1, the next level. -->
 	<slot id="28" x="5"  y="-4" faceup="1" layer="4" hiddenby="15,16" />
