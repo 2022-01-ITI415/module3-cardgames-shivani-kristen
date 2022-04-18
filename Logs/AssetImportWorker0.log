@@ -644,3 +644,4 @@ Received Import Request.
   path: Assets/Golf/GameScene.unity
   artifactKey: Guid(647cacd99a01f8541be19f5e7f0d5c9c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
 Start importing Assets/Golf/GameScene.unity using Guid(647cacd99a01f8541be19f5e7f0d5c9c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '273a78419c96319bb7a19217137bdcd8') in 0.015125 seconds 
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file
