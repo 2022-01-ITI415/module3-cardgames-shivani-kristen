@@ -74,8 +74,7 @@ public class Prospector : MonoBehaviour {
 			cp.transform.localPosition = new Vector3 (
 				layout.multiplier.x * tSD.x,
 				layout.multiplier.y * tSD.y,
-				-tSD.layerID
-			);
+				-tSD.layerID);
 			cp.layoutID = tSD.id;
 			cp.slotDef = tSD;
 			cp.state = eCardState.tableau;
@@ -148,7 +147,34 @@ public class Prospector : MonoBehaviour {
 				MoveToTarget(Draw());
 				UpdateDrawPile();
 				break;
+
+			case eCardState.tableau:
+				bool validMatch = true;
+				if(!cd.faceUp) {
+					validMatch = false;
+				}
+				if(!AdjacentRank(cd, target)) {
+					validMatch = false;
+				}
+				if(!validMatch) return;
+
+				tableau.Remove(cd);
+				MoveToTarget(cd);
+				break;
 		}
+	}
+
+	public bool AdjacentRank(CardProspector c0, CardProspector c1) {
+		if(!c0.faceUp || !c1.faceUp) return(false);
+
+		if(Mathf.Abs(c0.rank - c1.rank) ==1) {
+			return(true);
+		}
+
+		if(c0.rank == 1 && c1.rank == 13) return(true);
+		if(c0.rank == 13 && c1.rank == 1) return(true);
+
+		return(false);
 	}
 
 }
