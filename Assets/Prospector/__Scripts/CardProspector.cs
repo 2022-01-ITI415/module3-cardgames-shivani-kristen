@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// an enum defines a variable type with a few prenamed values
 public enum eCardState
 {
     drawpile,
@@ -10,16 +9,30 @@ public enum eCardState
     target,
     discard
 }
-
 public class CardProspector : Card
 {
     [Header("Set Dynamically: CardProspector")]
-    // this is how you use the enum eCardState
     public eCardState state = eCardState.drawpile;
-    // the hiddenBy list stores which other cards will keep this one face down
     public List<CardProspector> hiddenBy = new List<CardProspector>();
-    // the layoutID matches this card to the tableau xml if it's a tableau card
     public int layoutID;
-    // the SlotDef class stores info pulled from the LayoutXML <slot>
     public SlotDef slotDef;
+
+    public override void OnMouseUpAsButton()
+    {
+        Prospector.S.CardClicked(this);
+        base.OnMouseUpAsButton();
+    }
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
 }

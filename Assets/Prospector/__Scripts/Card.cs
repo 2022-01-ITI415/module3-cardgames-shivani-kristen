@@ -4,70 +4,17 @@ using System.Collections.Generic;
 
 public class Card : MonoBehaviour {
 
-	public string    suit;
-	public int       rank;
-	public Color     color = Color.black;
-	public string    colS = "Black";  // or "Red"
-	
+	public string suit;
+	public int rank;
+	public Color color = Color.black;
+	public string colS = "Black";  // or "Red"
+
 	public List<GameObject> decoGOs = new List<GameObject>();
 	public List<GameObject> pipGOs = new List<GameObject>();
-	
+
 	public GameObject back;  // back of card;
-	public CardDefinition def;  // from DeckXML.xml		
+	public CardDefinition def;  // from DeckXML_GS.xml		
 
-	public SpriteRenderer[] spriteRenderers; // list of the SpriteRenderer components of this GameObject and its children
-
-	void Start() {
-		SetSortOrder(0);
-	}
-
-	// if spriteRenderers is not yet defined, this function defines it
-	public void PopulateSpriteRenderers() {
-		// if spriteRenderers is null or empty
-		if (spriteRenderers == null || spriteRenderers.Length == 0) {
-			// get SpriteRenderer components of thsi GameObject and its children
-			spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-		}
-	}
-
-	// sets the sortingLayerName on all SpriteRenderer components
-	public void SetSortingLayerName(string tSLN) {
-		PopulateSpriteRenderers();
-		
-		foreach(SpriteRenderer tSR in spriteRenderers) {
-			tSR.sortingLayerName = tSLN;
-		}
-	}
-
-	// sets the sortingOrder of all SpriteRenderer components
-	public void SetSortOrder(int sOrd) {
-		PopulateSpriteRenderers();
-
-		// iterate through all the spriteRenderers as tSR
-		foreach(SpriteRenderer tSR in spriteRenderers) {
-			if(tSR.gameObject == this.gameObject) {
-				// if this gameObject is this.gameObject, it's the background
-				tSR.sortingOrder = sOrd; //  set its order to sOrd
-				continue;
-			}
-
-			// each of the children of this GameObject are named
-			// switch based on the names
-			switch(tSR.gameObject.name) {
-				case "back": // if the name is "back
-					// set it to the highest layer to cover the other sprites
-					tSR.sortingOrder = sOrd+2;
-					break;
-				
-				case "face": // if the name is "face"
-				default: // or if it's anything else
-					// set it to the middle layer to be above the background
-					tSR.sortingOrder = sOrd+1;
-					break;
-
-			}
-		}
-	}
 
 	public bool faceUp {
 		get {
@@ -76,8 +23,62 @@ public class Card : MonoBehaviour {
 
 		set {
 			back.SetActive(!value);
-		}
+		}	
+}
+	virtual public void OnMouseUpAsButton()
+	{
+		print(name);
 	}
+
+	public SpriteRenderer[] spriteRenderers;
+
+
+	// Use this for initialization
+	void Start () {
+		SetSortOrder(0);
+	}
+
+	public void PopulateSpriteRenderers()
+    {
+		if (spriteRenderers == null || spriteRenderers.Length == 0)
+        {
+			spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+        }
+    }
+
+	public void SetSortingLayerName(string tSLN)
+    {
+		PopulateSpriteRenderers();
+		foreach(SpriteRenderer tSR in spriteRenderers)
+        {
+			tSR.sortingLayerName = tSLN;
+        }
+    }
+
+	public void SetSortOrder(int sOrd)
+    {
+		PopulateSpriteRenderers();
+		foreach(SpriteRenderer tSR in spriteRenderers)
+        {
+			if (tSR.gameObject == this.gameObject)
+            {
+				tSR.sortingOrder = sOrd;
+				continue;
+            }
+			switch (tSR.gameObject.name)
+            {
+				case "back":
+					tSR.sortingOrder = sOrd + 2;
+					break;
+				case "face":
+				default:
+					tSR.sortingOrder = sOrd + 1;
+					break;
+            }
+        }
+
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
